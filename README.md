@@ -11,14 +11,18 @@
 
 Follow these steps to install and set up the project:
 
-1. Install dependencies using Composer:
+1. **Install dependencies using Composer:**
     ```sh
     composer install
     ```
 
-2. Add the `.env` file sent to you via email to the root directory of the project. Ensure the following variables are set:
+2. **Update the following variable to use SQLite:**
     ```env
     DB_CONNECTION=sqlite
+    ```
+
+3. **Find the Cloudflare R2 configuration in the email and add the following variables to the `.env` file:**
+    ```env
     CLOUDFLARE_R2_ENDPOINT=GET FROM EMAIL
     CLOUDFLARE_ACCESS_KEY_ID=GET FROM EMAIL
     CLOUDFLARE_ACCESS_KEY_SECRET=GET FROM EMAIL
@@ -26,27 +30,27 @@ Follow these steps to install and set up the project:
     CLOUDFLARE_R2_ACCOUNT_ID=GET FROM EMAIL
     ```
 
-3. Generate the application key:
+4. **Generate the application key:**
     ```sh
     php artisan key:generate
     ```
 
-4. Run the database migrations:
+5. **Run the database migrations:**
     ```sh
     php artisan migrate
     ```
 
-5. Install frontend dependencies using npm:
+6. **Install frontend dependencies using npm:**
     ```sh
     npm install
     ```
 
-6. Start the Laravel development server:
+7. **Start the Laravel development server:**
     ```sh
     php artisan serve
     ```
 
-7. Run the frontend development server:
+8. **Run the frontend development server:**
     ```sh
     npm run dev
     ```
