@@ -6,6 +6,41 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+## Installation Guide
+
+Follow these steps to install and set up the project:
+
+1. Install dependencies using Composer:
+    ```sh
+    composer install
+    ```
+
+2. Add the `.env` file sent to you via email to the root directory of the project.
+
+3. Generate the application key:
+    ```sh
+    php artisan key:generate
+    ```
+
+4. Run the database migrations:
+    ```sh
+    php artisan migrate
+    ```
+
+5. Install frontend dependencies using npm:
+    ```sh
+    npm install
+    ```
+
+6. Start the Laravel development server:
+    ```sh
+    php artisan serve
+    ```
+
+7. Run the frontend development server:
+    ```sh
+    npm run dev
+    ```
 
 ## About Laravel
 
@@ -49,41 +84,6 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[byte5](https://byte5.de)**
 - **[OP.GG](https://op.gg)**
 
-## Installation Guide
-
-Follow these steps to install and set up the project:
-
-1. Install dependencies using Composer:
-    ```sh
-    composer install
-    ```
-
-2. Add the `.env` file sent to you via email to the root directory of the project.
-
-3. Generate the application key:
-    ```sh
-    php artisan key:generate
-    ```
-
-4. Run the database migrations:
-    ```sh
-    php artisan migrate
-    ```
-
-5. Install frontend dependencies using npm:
-    ```sh
-    npm install
-    ```
-
-6. Start the Laravel development server:
-    ```sh
-    php artisan serve
-    ```
-
-7. Run the frontend development server:
-    ```sh
-    npm run dev
-    ```
 
 ## Contributing
 
