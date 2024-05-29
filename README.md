@@ -49,6 +49,42 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[byte5](https://byte5.de)**
 - **[OP.GG](https://op.gg)**
 
+## Installation Guide
+
+Follow these steps to install and set up the project:
+
+1. Install dependencies using Composer:
+    ```sh
+    composer install
+    ```
+
+2. Add the `.env` file sent to you via email to the root directory of the project.
+
+3. Generate the application key:
+    ```sh
+    php artisan key:generate
+    ```
+
+4. Run the database migrations:
+    ```sh
+    php artisan migrate
+    ```
+
+5. Install frontend dependencies using npm:
+    ```sh
+    npm install
+    ```
+
+6. Start the Laravel development server:
+    ```sh
+    php artisan serve
+    ```
+
+7. Run the frontend development server:
+    ```sh
+    npm run dev
+    ```
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
