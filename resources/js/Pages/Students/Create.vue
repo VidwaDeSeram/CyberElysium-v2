@@ -108,6 +108,8 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { ref } from "vue";
 
 const form = useForm({
     name: "",
@@ -116,16 +118,71 @@ const form = useForm({
     status: true,
 });
 
-const handleImageUpload = (event) => {
+const presignedUrl = ref("");
+const r2url = ref("");
+const selectedFile = ref(null);
+
+const getPresignedUrl = async (fileName, domain, contentType) => {
+    try {
+        const response = await axios.post("/generate-presigned-url", {
+            fileName,
+            domain,
+            contentType,
+        });
+        console.log("Presigned URL response:", response); // Log the entire response
+        presignedUrl.value = response.data.presignedUrl;
+        r2url.value = response.data.r2url;
+    } catch (error) {
+        console.error(
+            "Error fetching presigned URL:",
+            error.response?.data || error.message
+        );
+        Swal.fire({
+            icon: "error",
+            title: "Error fetching presigned URL",
+            text: error.response?.data?.error || error.message,
+        });
+    }
+};
+
+const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-        form.image = file.path; // Get the absolute path of the selected image file
+        selectedFile.value = file;
+
+        await getPresignedUrl(file.name, "students", file.type);
     } else {
         form.image = "";
     }
 };
 
-const submitForm = () => {
+const uploadImage = async () => {
+    if (selectedFile.value) {
+        const file = selectedFile.value;
+        try {
+            const response = await axios.put(presignedUrl.value, file, {
+                headers: {
+                    "Content-Type": selectedFile.value.type,
+                },
+            });
+            form.image = r2url.value;
+            console.log("Image uploaded successfully:", response.data);
+        } catch (error) {
+            console.error(
+                "Error uploading image:",
+                error.response?.data || error.message
+            );
+            Swal.fire({
+                icon: "error",
+                title: "Error uploading image",
+                text: error.response?.data?.error || error.message,
+            });
+        }
+    }
+};
+
+const submitForm = async () => {
+    await uploadImage();
     form.post(route("students.store"), {
         onSuccess: () => {
             Swal.fire({

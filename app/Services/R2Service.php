@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Aws\S3\S3Client;
-use Aws\S3\Exception\S3Exception;
+use Aws\Exception\AwsException;
 use Aws\Credentials\Credentials;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -41,7 +41,7 @@ class R2Service
         try {
             $request = $this->s3Client->createPresignedRequest($cmd, '+1 hour');
             $presignedUrl = (string)$request->getUri();
-            $r2url = "https://{$bucket}." . env('CLOUDFLARE_R2_ACCOUNT_ID') . ".r2.cloudflarestorage.com/{$key}";
+            $r2url = "https://pub-a9a956148eae4bf2935ed98de6e1d143.r2.dev/{$bucket}"."/{$key}";
 
             Log::info("Generated presigned URL for {$fileName} in {$domain} domain with {$contentType} content type");
 
@@ -49,9 +49,10 @@ class R2Service
                 'presignedUrl' => $presignedUrl,
                 'r2url' => $r2url,
             ];
-        } catch (S3Exception $e) {
+        } catch (AwsException $e) {
             Log::error("Error generating presigned URL: " . $e->getMessage());
-            throw new \Exception("Could not generate presigned URL");
+            throw new \Exception("Could not generate presigned URL: " . $e->getMessage());
         }
     }
 }
+

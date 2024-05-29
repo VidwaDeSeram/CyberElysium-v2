@@ -45,7 +45,7 @@
                                     </td>
                                     <td class="border px-4 py-2">
                                         <img
-                                            :src="`/storage/${student.image}`"
+                                            :src="`${student.image}`"
                                             alt="Student Image"
                                             class="w-16 h-16 object-cover"
                                         />

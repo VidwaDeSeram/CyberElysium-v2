@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StudentController; // Import the StudentController
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\R2Controller;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

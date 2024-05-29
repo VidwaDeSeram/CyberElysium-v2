@@ -1,12 +1,12 @@
 <template>
-    <Head title="Edit Student" />
+    <Head :title="isEdit ? 'Edit Student' : 'Create Student'" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Edit Student
+                {{ isEdit ? "Edit Student" : "Create Student" }}
             </h2>
         </template>
 
@@ -39,14 +39,14 @@
                                     >Image</label
                                 >
                                 <input
-                                    @input="form.image = $event.target.files[0]"
+                                    @change="handleImageUpload"
                                     type="file"
                                     id="image"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
-                                <div v-if="form.image" class="mt-2">
+                                <div v-if="isEdit && form.image" class="mt-2">
                                     <img
-                                        :src="`/storage/${form.image}`"
+                                        :src="form.image"
                                         alt="Student Image"
                                         class="w-32 h-32 object-cover"
                                     />
@@ -90,7 +90,7 @@
                                     type="submit"
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 >
-                                    Update
+                                    {{ isEdit ? "Update" : "Create" }}
                                 </button>
                                 <Link
                                     :href="route('dashboard')"
@@ -110,41 +110,135 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { ref } from "vue";
 
 const props = defineProps({
-    student: Object,
+    student: {
+        type: Object,
+        default: () => ({}),
+    },
 });
+
+const isEdit = !!props.student.id;
 
 const form = useForm({
-    name: props.student.name,
-    image: props.student.image,
-    age: props.student.age,
-    status: props.student.status,
+    name: props.student.name || "",
+    image: props.student.image || "",
+    age: props.student.age || "",
+    status: props.student.status || true,
 });
 
-const submitForm = () => {
-    // Get the absolute path of the selected image file
-    form.image = form.image ? form.image.path : null;
+const presignedUrl = ref("");
+const r2url = ref("");
+const selectedFile = ref(null);
 
-    // Submit the form
-    form.put(route("students.update", props.student.id), {
-        onSuccess: () => {
-            Swal.fire({
-                icon: "success",
-                title: "Student updated successfully!",
-                showConfirmButton: false,
-                timer: 1500,
-            });
-        },
-        onError: (errors) => {
+const getPresignedUrl = async (fileName, domain, contentType) => {
+    try {
+        const response = await axios.post("/generate-presigned-url", {
+            fileName,
+            domain,
+            contentType,
+        });
+        presignedUrl.value = response.data.presignedUrl;
+        r2url.value = response.data.r2url;
+    } catch (error) {
+        console.error(
+            "Error fetching presigned URL:",
+            error.response?.data || error.message
+        );
+        Swal.fire({
+            icon: "error",
+            title: "Error fetching presigned URL",
+            text: error.response?.data?.error || error.message,
+        });
+    }
+};
+
+const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        selectedFile.value = file;
+        await getPresignedUrl(file.name, "students", file.type);
+    } else {
+        selectedFile.value = null;
+    }
+};
+
+const uploadImage = async () => {
+    if (selectedFile.value) {
+        try {
+            const response = await axios.put(
+                presignedUrl.value,
+                selectedFile.value,
+                {
+                    headers: {
+                        "Content-Type": selectedFile.value.type,
+                    },
+                }
+            );
+            form.image = r2url.value;
+        } catch (error) {
+            console.error(
+                "Error uploading image:",
+                error.response?.data || error.message
+            );
             Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "Something went wrong!",
-                footer: Object.values(errors).flat().join("<br>"),
-                confirmButtonText: "OK",
+                title: "Error uploading image",
+                text: error.response?.data?.error || error.message,
             });
-        },
-    });
+        }
+    }
+};
+
+const submitForm = async () => {
+    if (selectedFile.value) {
+        await uploadImage();
+    } else if (!isEdit) {
+        form.image = "";
+    }
+
+    if (isEdit) {
+        form.put(route("students.update", props.student.id), {
+            onSuccess: () => {
+                Swal.fire({
+                    icon: "success",
+                    title: "Student updated successfully!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            },
+            onError: (errors) => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    footer: Object.values(errors).flat().join("<br>"),
+                    confirmButtonText: "OK",
+                });
+            },
+        });
+    } else {
+        form.post(route("students.store"), {
+            onSuccess: () => {
+                Swal.fire({
+                    icon: "success",
+                    title: "Student created successfully!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            },
+            onError: (errors) => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    footer: Object.values(errors).flat().join("<br>"),
+                    confirmButtonText: "OK",
+                });
+            },
+        });
+    }
 };
 </script>
