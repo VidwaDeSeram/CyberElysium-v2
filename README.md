@@ -16,7 +16,7 @@ Follow these steps to install and set up the project:
     composer install
     ```
 
-2. **Update the following variable to use SQLite:**
+2. **Add the `.env` file sent to you via email to the root directory of the project. Update the following variable to use SQLite:**
     ```env
     DB_CONNECTION=sqlite
     ```
@@ -54,6 +54,37 @@ Follow these steps to install and set up the project:
     ```sh
     npm run dev
     ```
+
+## Project Description
+
+This project was developed as part of an assignment for the Full Stack Developer Internship at CyberElysium. The key requirements and features of the project are as follows:
+
+- **Framework:** Laravel 10
+- **SPA Framework:** Inertia.js
+- **Design Pattern:** Facade Design Pattern
+- **Authentication:** Breeze
+- **Frontend Framework:** Vue.js
+- **Styling:** Bootstrap
+- **Storage:** AWS SDK with Cloudflare R2 Storage
+
+### Features
+
+1. **User Authentication:**
+   - Implemented login functionality that redirects users to the Dashboard upon successful authentication.
+
+2. **CRUD Operations for Students:**
+   - Users can add, view, edit, and delete student records.
+   - Each student record includes an ID, name, image, age, and status (active/inactive).
+
+## Tools Used
+
+- **Laravel 10:** For backend development.
+- **Inertia.js:** To create a seamless single-page application experience.
+- **Facade Design Pattern:** Implemented as per project requirements.
+- **Breeze Authentication:** For setting up the authentication system.
+- **Vue.js:** For the frontend, integrated with Inertia.js.
+- **Bootstrap:** For responsive design and styling.
+- **AWS SDK with Cloudflare R2 Storage:** For image uploads and secure file handling.
 
 ## About Laravel
 
