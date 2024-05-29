@@ -89,8 +89,34 @@
                                 <button
                                     type="submit"
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    :disabled="loading"
                                 >
-                                    {{ isEdit ? "Update" : "Create" }}
+                                    <template v-if="loading">
+                                        <svg
+                                            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"
+                                            ></circle>
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                        </svg>
+                                        Processing...
+                                    </template>
+                                    <template v-else>
+                                        {{ isEdit ? "Update" : "Create" }}
+                                    </template>
                                 </button>
                                 <Link
                                     :href="route('dashboard')"
@@ -132,6 +158,7 @@ const form = useForm({
 const presignedUrl = ref("");
 const r2url = ref("");
 const selectedFile = ref(null);
+const loading = ref(false);
 
 const getPresignedUrl = async (fileName, domain, contentType) => {
     try {
@@ -193,6 +220,8 @@ const uploadImage = async () => {
 };
 
 const submitForm = async () => {
+    loading.value = true;
+
     if (selectedFile.value) {
         await uploadImage();
     } else if (!isEdit) {
@@ -208,6 +237,7 @@ const submitForm = async () => {
                     showConfirmButton: false,
                     timer: 1500,
                 });
+                loading.value = false;
             },
             onError: (errors) => {
                 Swal.fire({
@@ -217,6 +247,7 @@ const submitForm = async () => {
                     footer: Object.values(errors).flat().join("<br>"),
                     confirmButtonText: "OK",
                 });
+                loading.value = false;
             },
         });
     } else {
@@ -228,6 +259,7 @@ const submitForm = async () => {
                     showConfirmButton: false,
                     timer: 1500,
                 });
+                loading.value = false;
             },
             onError: (errors) => {
                 Swal.fire({
@@ -237,6 +269,7 @@ const submitForm = async () => {
                     footer: Object.values(errors).flat().join("<br>"),
                     confirmButtonText: "OK",
                 });
+                loading.value = false;
             },
         });
     }

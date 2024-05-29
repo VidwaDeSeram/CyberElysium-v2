@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/generate-presigned-url', [R2Controller::class, 'generatePresignedUrl']);
     Route::resource('students', StudentController::class);
+    Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
 });
 
 require __DIR__.'/auth.php';
