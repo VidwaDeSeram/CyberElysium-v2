@@ -6,6 +6,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+
 ## Installation Guide
 
 Follow these steps to install and set up the project:
@@ -15,7 +16,15 @@ Follow these steps to install and set up the project:
     composer install
     ```
 
-2. Add the `.env` file sent to you via email to the root directory of the project.
+2. Add the `.env` file sent to you via email to the root directory of the project. Ensure the following variables are set:
+    ```env
+    DB_CONNECTION=sqlite
+    CLOUDFLARE_R2_ENDPOINT=GET FROM EMAIL
+    CLOUDFLARE_ACCESS_KEY_ID=GET FROM EMAIL
+    CLOUDFLARE_ACCESS_KEY_SECRET=GET FROM EMAIL
+    CLOUDFLARE_R2_BUCKET_NAME=GET FROM EMAIL
+    CLOUDFLARE_R2_ACCOUNT_ID=GET FROM EMAIL
+    ```
 
 3. Generate the application key:
     ```sh
@@ -83,7 +92,6 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[Active Logic](https://activelogic.com)**
 - **[byte5](https://byte5.de)**
 - **[OP.GG](https://op.gg)**
-
 
 ## Contributing
 
